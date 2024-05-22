@@ -34,11 +34,11 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping()
-    public ResponseEntity<List<Post>> getAll(@RequestParam(required = false) Optional<String> param) {
-        if (param.isEmpty()) {
+    public ResponseEntity<List<Post>> getAll(@RequestParam(required = false) Optional<String> q) {
+        if (q.isEmpty()) {
             return ResponseEntity.ok(postService.getAll());
         } else {
-            List<Post> posts = postService.filterByTitleAndContent(param.get());
+            List<Post> posts = postService.filterByTitleAndContent(q.get());
             if (posts.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
@@ -74,7 +74,7 @@ public class PostController {
     public ResponseEntity<?> getById(@PathVariable int id) {
         try {
             Optional<Post> postFounded = postService.getById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(postFounded);
+            return ResponseEntity.status(HttpStatus.OK).body(postFounded);
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }

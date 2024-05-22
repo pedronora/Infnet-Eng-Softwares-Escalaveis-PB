@@ -34,11 +34,11 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping()
-    public ResponseEntity<List<Comment>> getAll(@RequestParam(required = false) Optional<String> param) {
-        if (param.isEmpty()) {
+    public ResponseEntity<List<Comment>> getAll(@RequestParam(required = false) Optional<String> q) {
+        if (q.isEmpty()) {
             return ResponseEntity.ok(commentService.getAll());
         } else {
-            List<Comment> comments = commentService.filterByTitleAndContent(param.get());
+            List<Comment> comments = commentService.filterByTitleAndContent(q.get());
             if (comments.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
@@ -73,7 +73,7 @@ public class CommentController {
     public ResponseEntity<?> getById(@PathVariable int id) {
         try {
             Optional<Comment> commentFounded = commentService.getById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentFounded);
+            return ResponseEntity.status(HttpStatus.OK).body(commentFounded);
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }
