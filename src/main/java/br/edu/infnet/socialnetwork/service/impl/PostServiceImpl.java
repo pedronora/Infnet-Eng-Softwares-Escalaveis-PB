@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post create(Post post) {
-        Date date = new Date();
-        post.setCreatedDate(date);
-        post.setUpdatedDate(date);
         return postRepository.save(post);
     }
 
@@ -49,16 +45,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post update(Long id, Post postToUpdate) {
-        Optional<Post> existingPost = getById(id);
+        Optional<Post> existingPostOpt = getById(id);
 
-        if (existingPost.isEmpty()) {
+        if (existingPostOpt.isEmpty()) {
             throw new ResourceNotFoundException("Não encontrado post com id " + id);
         }
 
-        postToUpdate.setId(id);
-        postToUpdate.setCreatedDate(existingPost.get().getCreatedDate());
-        postToUpdate.setUpdatedDate(new Date());
-        return postRepository.save(postToUpdate);
+        Post existingPost = existingPostOpt.get();
+        existingPost.setTitle(postToUpdate.getTitle());
+        existingPost.setContent(postToUpdate.getContent());
+
+        return postRepository.save(existingPost);
     }
 
     @Override

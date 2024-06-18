@@ -14,6 +14,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+
 import java.util.Date;
 
 @Data
@@ -33,8 +36,20 @@ public class Comment {
     private Post post;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date createdDate;
+    private Date createdAt;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date updatedDate;
+    private Date updatedAt;
+
+        @PrePersist
+    protected void onCreate() {
+        Date now = new Date();
+        createdAt = now;
+        updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
 }

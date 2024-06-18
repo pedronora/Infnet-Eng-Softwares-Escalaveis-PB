@@ -82,9 +82,10 @@ public class CommentServiceTest {
 
         createdComment.setContent(newContent);
         Comment updatedComment = commentService.update(createdComment.getId(), createdComment);
+
         assertEquals(newContent, updatedComment.getContent());
-        assertEquals(createdComment.getCreatedDate(), updatedComment.getCreatedDate());
-        assertNotEquals(createdComment.getUpdatedDate(), updatedComment.getUpdatedDate());
+        assertEquals(createdComment.getCreatedAt(), updatedComment.getCreatedAt());
+        assertNotEquals(createdComment.getUpdatedAt(), updatedComment.getUpdatedAt());
     }
 
     @Test

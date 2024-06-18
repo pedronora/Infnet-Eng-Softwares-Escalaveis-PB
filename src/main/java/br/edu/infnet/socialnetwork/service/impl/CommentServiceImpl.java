@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,12 +31,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment create(Comment comment) {
-        Date date = new Date();
-        comment.setCreatedDate(date);
-        comment.setUpdatedDate(date);
         return commentRepository.save(comment);
     }
 
+    @Override
     public Optional<Comment> getById(Long id) {
         Optional<Comment> commentToRetrieve = commentRepository.findById(id);
         if (commentToRetrieve.isEmpty()) {
@@ -48,17 +45,18 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment update(Long id, Comment commentToUpdate) {
-        Optional<Comment> existingComment = getById(id);
-
-        if (existingComment.isEmpty()) {
+        Optional<Comment> existingCommentOpt = getById(id);
+    
+        if (existingCommentOpt.isEmpty()) {
             throw new ResourceNotFoundException("Não encontrado comentário com id " + id);
         }
-        
-        commentToUpdate.setId(id);
-        commentToUpdate.setCreatedDate(existingComment.get().getCreatedDate());
-        commentToUpdate.setUpdatedDate(new Date());
-        return commentRepository.save(commentToUpdate);
+    
+        Comment existingComment = existingCommentOpt.get();
+        existingComment.setContent(commentToUpdate.getContent());
+       
+        return commentRepository.save(existingComment);
     }
+    
 
     @Override
     public void delete(Long id) {

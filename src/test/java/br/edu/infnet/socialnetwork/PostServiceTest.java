@@ -88,10 +88,10 @@ public class PostServiceTest {
         createdPost.setTitle(newTitle);
         createdPost.setContent(newContent);
         Post updatedPost = postService.update(createdPost.getId(), createdPost);
-        assertEquals(updatedPost.getTitle(), newTitle);
-        assertEquals(updatedPost.getContent(), newContent);
-        assertEquals(createdPost.getCreatedDate(), updatedPost.getCreatedDate());
-        assertNotEquals(createdPost.getUpdatedDate(), updatedPost.getUpdatedDate());
+        assertEquals(newTitle, updatedPost.getTitle());
+        assertEquals(newContent, updatedPost.getContent());
+        assertEquals(createdPost.getCreatedAt(), updatedPost.getCreatedAt());
+        assertNotEquals(createdPost.getUpdatedAt(), updatedPost.getUpdatedAt());
     }
 
     @Test
