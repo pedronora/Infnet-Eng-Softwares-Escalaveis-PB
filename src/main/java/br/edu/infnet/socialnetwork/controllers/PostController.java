@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import models.Post;
+import br.edu.infnet.socialnetwork.models.Post;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +28,8 @@ public class PostController {
 
     @Operation(summary = "Retorna uma lista de Posts")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = Post.class)))}),
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Post.class))) }),
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping()
@@ -49,11 +48,10 @@ public class PostController {
 
     @Operation(summary = "Publica um post")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Post publicado com sucesso",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Post.class))})
+            @ApiResponse(responseCode = "201", description = "Post publicado com sucesso", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class)) })
     })
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<DetailPayload> create(@RequestBody Post post) {
         postService.create(post);
         return ResponseEntity.status(HttpStatus.CREATED).body(new DetailPayload("Post publicado com sucesso!"));
@@ -61,17 +59,13 @@ public class PostController {
 
     @Operation(summary = "Retorna um post pelo seu ID")
 
-    @GetMapping("/{id}/details")
+    @GetMapping("/{id}")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Post encontrado com sucesso",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Post.class))}
-            ),
-            @ApiResponse(responseCode = "404", description = "Post não encontrado",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DetailPayload.class))}
-            )})
-    public ResponseEntity<?> getById(@PathVariable int id) {
+            @ApiResponse(responseCode = "200", description = "Post encontrado com sucesso", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class)) }),
+            @ApiResponse(responseCode = "404", description = "Post não encontrado", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = DetailPayload.class)) }) })
+    public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
             Optional<Post> postFounded = postService.getById(id);
             return ResponseEntity.status(HttpStatus.OK).body(postFounded);
@@ -82,16 +76,12 @@ public class PostController {
 
     @Operation(summary = "Atualiza um post")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Post atualizado com sucesso",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DetailPayload.class))}
-            ),
-            @ApiResponse(responseCode = "404", description = "Post não encontrado",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DetailPayload.class))}
-            )})
-    @PutMapping("/{id}/update")
-    public ResponseEntity<DetailPayload> update(@RequestBody Post post, @PathVariable int id) {
+            @ApiResponse(responseCode = "202", description = "Post atualizado com sucesso", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = DetailPayload.class)) }),
+            @ApiResponse(responseCode = "404", description = "Post não encontrado", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = DetailPayload.class)) }) })
+    @PutMapping("/{id}")
+    public ResponseEntity<DetailPayload> update(@RequestBody Post post, @PathVariable Long id) {
         try {
             postService.update(id, post);
             return ResponseEntity.status(HttpStatus.ACCEPTED)
@@ -103,22 +93,16 @@ public class PostController {
 
     @Operation(summary = "Deleta um post")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "202",
-                    description = "Deletado com sucesso!",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DetailPayload.class))}),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Post não encontrado!",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DetailPayload.class))})
+            @ApiResponse(responseCode = "200", description = "Deletado com sucesso!", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = DetailPayload.class)) }),
+            @ApiResponse(responseCode = "404", description = "Post não encontrado!", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = DetailPayload.class)) })
     })
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> delete(@PathVariable int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             postService.delete(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new DetailPayload("Deletado com sucesso"));
+            return ResponseEntity.status(HttpStatus.OK).body(new DetailPayload("Deletado com sucesso"));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }

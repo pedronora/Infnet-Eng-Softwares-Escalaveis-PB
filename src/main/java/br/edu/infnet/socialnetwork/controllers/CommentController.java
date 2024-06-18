@@ -1,6 +1,7 @@
 package br.edu.infnet.socialnetwork.controllers;
 
 import br.edu.infnet.socialnetwork.exception.ResourceNotFoundException;
+import br.edu.infnet.socialnetwork.models.Comment;
 import br.edu.infnet.socialnetwork.payload.DetailPayload;
 import br.edu.infnet.socialnetwork.services.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import models.Comment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,14 +53,14 @@ public class CommentController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Comment.class))})
     })
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<DetailPayload> create(@RequestBody Comment comment) {
         commentService.create(comment);
         return ResponseEntity.status(HttpStatus.CREATED).body(new DetailPayload("Comentário publicado com sucesso!"));
     }
 
     @Operation(summary = "Retorna um comentário pelo seu ID")
-    @GetMapping("/{id}/details")
+    @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Comentário encontrado com sucesso",
                     content = {@Content(mediaType = "application/json",
@@ -70,7 +70,7 @@ public class CommentController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = DetailPayload.class))}
             )})
-    public ResponseEntity<?> getById(@PathVariable int id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
             Optional<Comment> commentFounded = commentService.getById(id);
             return ResponseEntity.status(HttpStatus.OK).body(commentFounded);
@@ -89,8 +89,8 @@ public class CommentController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = DetailPayload.class))}
             )})
-    @PutMapping("/{id}/update")
-    public ResponseEntity<DetailPayload> update(@RequestBody Comment comment, @PathVariable int id) {
+    @PutMapping("/{id}")
+    public ResponseEntity<DetailPayload> update(@RequestBody Comment comment, @PathVariable Long id) {
         try {
             commentService.update(id, comment);
             return ResponseEntity.status(HttpStatus.ACCEPTED)
@@ -113,8 +113,8 @@ public class CommentController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = DetailPayload.class))})
     })
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> delete(@PathVariable int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             commentService.delete(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new DetailPayload("Deletado com sucesso"));
