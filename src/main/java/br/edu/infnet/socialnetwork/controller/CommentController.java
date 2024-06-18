@@ -54,9 +54,9 @@ public class CommentController {
                             schema = @Schema(implementation = Comment.class))})
     })
     @PostMapping()
-    public ResponseEntity<DetailPayload> create(@RequestBody Comment comment) {
-        commentService.create(comment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new DetailPayload("Comentário publicado com sucesso!"));
+    public ResponseEntity<Comment> create(@RequestBody Comment comment) {
+        Comment newComment = commentService.create(comment);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
 
     @Operation(summary = "Retorna um comentário pelo seu ID")
@@ -83,18 +83,18 @@ public class CommentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Comentário atualizado com sucesso",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DetailPayload.class))}
+                            schema = @Schema(implementation = Comment.class))}
             ),
             @ApiResponse(responseCode = "404", description = "Comentário não encontrado",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = DetailPayload.class))}
             )})
     @PutMapping("/{id}")
-    public ResponseEntity<DetailPayload> update(@RequestBody Comment comment, @PathVariable Long id) {
+    public ResponseEntity<?> update(@RequestBody Comment comment, @PathVariable Long id) {
         try {
-            commentService.update(id, comment);
+            Comment updatedComment = commentService.update(id, comment);
             return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(new DetailPayload("Comentário de id '" + id + "' atualizado com sucesso!"));
+                    .body(updatedComment);
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }

@@ -11,11 +11,13 @@ public interface PostService {
 
     public List<Post> filterByTitleAndContent(String param);
 
-    public void create(Post post);
+    public Post create(Post post);
 
     public Optional<Post> getById(Long id);
 
-    public void update(Long id, Post postToUpdate);
+    public Post update(Long id, Post postToUpdate);
 
     public void delete(Long id);
+
+    public void deleteAll();
 }

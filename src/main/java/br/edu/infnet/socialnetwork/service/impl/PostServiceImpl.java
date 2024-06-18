@@ -20,18 +20,22 @@ public class PostServiceImpl implements PostService {
     @Autowired
     PostRepository postRepository;
 
+    @Override
     public List<Post> getAll() {
         return postRepository.findAll();
     }
 
+    @Override
     public List<Post> filterByTitleAndContent(String param) {
         return postRepository.findByContentContainingIgnoreCase(param);
     }
 
-    public void create(Post post) {
-        postRepository.save(post);
+    @Override
+    public Post create(Post post) {
+        return postRepository.save(post);
     }
 
+    @Override
     public Optional<Post> getById(Long id) {
         Optional<Post> postToRetrieve = postRepository.findById(id);
         if (postToRetrieve.isEmpty()) {
@@ -40,7 +44,8 @@ public class PostServiceImpl implements PostService {
         return postToRetrieve;
     }
 
-    public void update(Long id, Post postToUpdate) {
+    @Override
+    public Post update(Long id, Post postToUpdate) {
         Optional<Post> existingPost = getById(id);
 
         if (existingPost.isEmpty()) {
@@ -48,9 +53,10 @@ public class PostServiceImpl implements PostService {
         }
 
         postToUpdate.setUpdatedDate(new Date());
-        postRepository.save(postToUpdate);
+        return postRepository.save(postToUpdate);
     }
 
+    @Override
     public void delete(Long id) {
         Optional<Post> postToDelete = getById(id);
 
@@ -58,5 +64,10 @@ public class PostServiceImpl implements PostService {
             throw new ResourceNotFoundException("Não encontrado post com id " + id);
         }
         postRepository.delete(postToDelete.get());
+    }
+
+    @Override
+    public void deleteAll() {
+        postRepository.deleteAll();
     }
 }

@@ -53,9 +53,9 @@ public class PostController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class)) })
     })
     @PostMapping()
-    public ResponseEntity<DetailPayload> create(@RequestBody Post post) {
-        postService.create(post);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new DetailPayload("Post publicado com sucesso!"));
+    public ResponseEntity<Post> create(@RequestBody Post post) {
+        Post newPost = postService.create(post);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newPost);
     }
 
     @Operation(summary = "Retorna um post pelo seu ID")
@@ -78,15 +78,15 @@ public class PostController {
     @Operation(summary = "Atualiza um post")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Post atualizado com sucesso", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = DetailPayload.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class)) }),
             @ApiResponse(responseCode = "404", description = "Post não encontrado", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = DetailPayload.class)) }) })
     @PutMapping("/{id}")
-    public ResponseEntity<DetailPayload> update(@RequestBody Post post, @PathVariable Long id) {
+    public ResponseEntity<?> update(@RequestBody Post post, @PathVariable Long id) {
         try {
-            postService.update(id, post);
+            Post updatedPost = postService.update(id, post);
             return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(new DetailPayload("Post de id '" + id + "' atualizado com sucesso!"));
+                    .body(updatedPost);
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }

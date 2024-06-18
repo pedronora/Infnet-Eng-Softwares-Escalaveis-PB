@@ -11,11 +11,13 @@ public interface CommentService {
 
     public List<Comment> filterByTitleAndContent(String param);
 
-    public void create(Comment comment);
+    public Comment create(Comment comment);
 
     public Optional<Comment> getById(Long id);
 
-    public void update(Long id, Comment commentToUpdate);
+    public Comment update(Long id, Comment commentToUpdate);
 
     public void delete(Long id);
+
+    public void deleteAll();
 }

@@ -20,16 +20,19 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     CommentRepository commentRepository;
 
+    @Override
     public List<Comment> getAll() {
         return commentRepository.findAll();
     }
 
+    @Override
     public List<Comment> filterByTitleAndContent(String param) {
         return commentRepository.findByContentContainingIgnoreCase(param);
     }
 
-    public void create(Comment comment) {
-        commentRepository.save(comment);
+    @Override
+    public Comment create(Comment comment) {
+        return commentRepository.save(comment);
     }
 
     public Optional<Comment> getById(Long id) {
@@ -40,7 +43,8 @@ public class CommentServiceImpl implements CommentService {
         return commentToRetrieve;
     }
 
-    public void update(Long id, Comment commentToUpdate) {
+    @Override
+    public Comment update(Long id, Comment commentToUpdate) {
         Optional<Comment> existingComment = getById(id);
 
         if (existingComment.isEmpty()) {
@@ -48,9 +52,10 @@ public class CommentServiceImpl implements CommentService {
         }
 
         commentToUpdate.setUpdatedDate(new Date());
-        commentRepository.save(commentToUpdate);
+        return commentRepository.save(commentToUpdate);
     }
 
+    @Override
     public void delete(Long id) {
         Optional<Comment> commentToDelete = getById(id);
 
@@ -58,5 +63,10 @@ public class CommentServiceImpl implements CommentService {
             throw new ResourceNotFoundException("Não encontrado comentaŕio com id " + id);
         }
         commentRepository.delete(commentToDelete.get());
+    }
+
+    @Override
+    public void deleteAll() {
+        commentRepository.deleteAll();;
     }
 }
