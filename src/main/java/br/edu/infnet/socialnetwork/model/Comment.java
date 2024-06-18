@@ -14,9 +14,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-
 import java.util.Date;
 
 @Data
@@ -40,15 +37,4 @@ public class Comment {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date updatedDate;
-
-    @PrePersist
-    protected void onCreate() {
-        createdDate = new Date();
-        updatedDate = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedDate = new Date();
-    }
 }

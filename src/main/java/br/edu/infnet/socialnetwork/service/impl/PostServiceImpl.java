@@ -52,6 +52,8 @@ public class PostServiceImpl implements PostService {
             throw new ResourceNotFoundException("Não encontrado post com id " + id);
         }
 
+        postToUpdate.setId(id);
+        postToUpdate.setCreatedDate(existingPost.get().getCreatedDate());
         postToUpdate.setUpdatedDate(new Date());
         return postRepository.save(postToUpdate);
     }

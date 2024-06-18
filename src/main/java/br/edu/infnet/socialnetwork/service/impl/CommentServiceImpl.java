@@ -50,7 +50,9 @@ public class CommentServiceImpl implements CommentService {
         if (existingComment.isEmpty()) {
             throw new ResourceNotFoundException("Não encontrado comentário com id " + id);
         }
-
+        
+        commentToUpdate.setId(id);
+        commentToUpdate.setCreatedDate(existingComment.get().getCreatedDate());
         commentToUpdate.setUpdatedDate(new Date());
         return commentRepository.save(commentToUpdate);
     }

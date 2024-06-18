@@ -12,9 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-
 import java.util.Date;
 import java.util.List;
 
@@ -39,15 +36,4 @@ public class Post {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date updatedDate;
-
-    @PrePersist
-    protected void onCreate() {
-        createdDate = new Date();
-        updatedDate = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedDate = new Date();
-    }
 }
