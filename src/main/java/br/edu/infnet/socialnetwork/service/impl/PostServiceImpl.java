@@ -32,6 +32,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post create(Post post) {
+        Date date = new Date();
+        post.setCreatedDate(date);
+        post.setUpdatedDate(date);
         return postRepository.save(post);
     }
 
