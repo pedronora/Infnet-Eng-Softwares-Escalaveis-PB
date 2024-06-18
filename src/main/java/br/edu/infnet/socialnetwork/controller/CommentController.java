@@ -1,9 +1,9 @@
-package br.edu.infnet.socialnetwork.controllers;
+package br.edu.infnet.socialnetwork.controller;
 
 import br.edu.infnet.socialnetwork.exception.ResourceNotFoundException;
-import br.edu.infnet.socialnetwork.models.Comment;
+import br.edu.infnet.socialnetwork.model.Comment;
 import br.edu.infnet.socialnetwork.payload.DetailPayload;
-import br.edu.infnet.socialnetwork.services.CommentService;
+import br.edu.infnet.socialnetwork.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

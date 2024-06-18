@@ -1,8 +1,11 @@
-package br.edu.infnet.socialnetwork.services;
+package br.edu.infnet.socialnetwork.service.impl;
 
 import br.edu.infnet.socialnetwork.exception.ResourceNotFoundException;
-import br.edu.infnet.socialnetwork.models.Comment;
+import br.edu.infnet.socialnetwork.model.Comment;
 import br.edu.infnet.socialnetwork.repository.CommentRepository;
+import br.edu.infnet.socialnetwork.service.CommentService;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CommentService {
+@RequiredArgsConstructor
+public class CommentServiceImpl implements CommentService {
 
     @Autowired
     CommentRepository commentRepository;

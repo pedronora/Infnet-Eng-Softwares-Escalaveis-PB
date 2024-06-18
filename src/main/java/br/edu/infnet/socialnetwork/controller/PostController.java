@@ -1,15 +1,16 @@
-package br.edu.infnet.socialnetwork.controllers;
+package br.edu.infnet.socialnetwork.controller;
 
 import br.edu.infnet.socialnetwork.exception.ResourceNotFoundException;
+import br.edu.infnet.socialnetwork.model.Post;
 import br.edu.infnet.socialnetwork.payload.DetailPayload;
-import br.edu.infnet.socialnetwork.services.PostService;
+import br.edu.infnet.socialnetwork.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import br.edu.infnet.socialnetwork.models.Post;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

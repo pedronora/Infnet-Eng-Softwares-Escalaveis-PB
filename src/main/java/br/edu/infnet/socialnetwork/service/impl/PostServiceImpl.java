@@ -1,8 +1,10 @@
-package br.edu.infnet.socialnetwork.services;
+package br.edu.infnet.socialnetwork.service.impl;
 
 import br.edu.infnet.socialnetwork.exception.ResourceNotFoundException;
+import br.edu.infnet.socialnetwork.model.Post;
 import br.edu.infnet.socialnetwork.repository.PostRepository;
-import br.edu.infnet.socialnetwork.models.Post;
+import br.edu.infnet.socialnetwork.service.PostService;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PostService {
+@RequiredArgsConstructor
+public class PostServiceImpl implements PostService {
 
     @Autowired
     PostRepository postRepository;
