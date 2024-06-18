@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
+
+    Logger logger = LoggerFactory.getLogger(PostController.class);
+
     final PostService postService;
 
     public PostController(PostService postService) {
@@ -36,12 +41,15 @@ public class PostController {
     @GetMapping()
     public ResponseEntity<List<Post>> getAll(@RequestParam(required = false) Optional<String> q) {
         if (q.isEmpty()) {
+            logger.info("Retornada lista de todos os posts");
             return ResponseEntity.ok(postService.getAll());
         } else {
             List<Post> posts = postService.filterByTitleAndContent(q.get());
             if (posts.isEmpty()) {
+                logger.info("Não há posts para serem apresentadas");
                 return ResponseEntity.notFound().build();
             } else {
+                logger.info("Retornada lista de posts com este parâmetro: " + q);
                 return ResponseEntity.ok(posts);
             }
         }
@@ -55,11 +63,11 @@ public class PostController {
     @PostMapping()
     public ResponseEntity<Post> create(@RequestBody Post post) {
         Post newPost = postService.create(post);
+        logger.info("Criado post com id '" + newPost.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(newPost);
     }
 
     @Operation(summary = "Retorna um post pelo seu ID")
-
     @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Post encontrado com sucesso", content = {
@@ -69,8 +77,10 @@ public class PostController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
             Optional<Post> postFounded = postService.getById(id);
+            logger.info("Post de id '" + id + "' recuperado com sucesso!");
             return ResponseEntity.status(HttpStatus.OK).body(postFounded);
         } catch (ResourceNotFoundException ex) {
+            logger.error("Não encontrado post com id: " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }
     }
@@ -85,9 +95,11 @@ public class PostController {
     public ResponseEntity<?> update(@RequestBody Post post, @PathVariable Long id) {
         try {
             Post updatedPost = postService.update(id, post);
+            logger.info("Post de id '" + id + "' atualizado com sucesso!");
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(updatedPost);
         } catch (ResourceNotFoundException ex) {
+            logger.error("Não encontrado post com id " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }
     }
@@ -103,8 +115,10 @@ public class PostController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             postService.delete(id);
+            logger.info("Post de id '" + id + "' deletado com sucesso!");
             return ResponseEntity.status(HttpStatus.OK).body(new DetailPayload("Deletado com sucesso"));
         } catch (ResourceNotFoundException ex) {
+            logger.error("Não encontrado post com id " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }
     }

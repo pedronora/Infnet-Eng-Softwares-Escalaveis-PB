@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
+
+    Logger logger = LoggerFactory.getLogger(CommentController.class);
+
     final CommentService commentService;
 
     public CommentController(CommentService commentService) {
@@ -36,12 +42,15 @@ public class CommentController {
     @GetMapping()
     public ResponseEntity<List<Comment>> getAll(@RequestParam(required = false) Optional<String> q) {
         if (q.isEmpty()) {
+            logger.info("Retornada lista de todos os comentários");
             return ResponseEntity.ok(commentService.getAll());
         } else {
             List<Comment> comments = commentService.filterByTitleAndContent(q.get());
             if (comments.isEmpty()) {
+                logger.info("Não há comentários para serem apresentadas");
                 return ResponseEntity.notFound().build();
             } else {
+                logger.info("Retornada lista de comentários com este parâmetro: " + q);
                 return ResponseEntity.ok(comments);
             }
         }
@@ -56,6 +65,7 @@ public class CommentController {
     @PostMapping()
     public ResponseEntity<Comment> create(@RequestBody Comment comment) {
         Comment newComment = commentService.create(comment);
+        logger.info("Criado comment com id '" + newComment.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
 
@@ -73,8 +83,10 @@ public class CommentController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
             Optional<Comment> commentFounded = commentService.getById(id);
+            logger.info("Comment de id '" + id + "' recuperado com sucesso!");
             return ResponseEntity.status(HttpStatus.OK).body(commentFounded);
         } catch (ResourceNotFoundException ex) {
+            logger.error("Não encontrado comment com id: " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }
     }
@@ -93,9 +105,11 @@ public class CommentController {
     public ResponseEntity<?> update(@RequestBody Comment comment, @PathVariable Long id) {
         try {
             Comment updatedComment = commentService.update(id, comment);
+            logger.info("Comment de id '" + id + "' atualizado com sucesso!");
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(updatedComment);
         } catch (ResourceNotFoundException ex) {
+            logger.error("Não encontrado comment com id " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }
     }
@@ -103,7 +117,7 @@ public class CommentController {
     @Operation(summary = "Deleta um comentário")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "202",
+                    responseCode = "200",
                     description = "Deletado com sucesso!",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = DetailPayload.class))}),
@@ -117,8 +131,10 @@ public class CommentController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             commentService.delete(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new DetailPayload("Deletado com sucesso"));
+            logger.info("Comment de id '" + id + "' deletado com sucesso!");
+            return ResponseEntity.status(HttpStatus.OK).body(new DetailPayload("Deletado com sucesso"));
         } catch (ResourceNotFoundException ex) {
+            logger.error("Não encontrado comment com id " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailPayload(ex.getMessage()));
         }
     }
