@@ -1,5 +1,6 @@
 package br.edu.infnet.socialnetwork.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,15 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 
 import java.util.Date;
 
@@ -30,7 +22,7 @@ public class Comment {
 
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "post_id")
     @JsonBackReference
     private Post post;
@@ -41,7 +33,7 @@ public class Comment {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date updatedAt;
 
-        @PrePersist
+    @PrePersist
     protected void onCreate() {
         Date now = new Date();
         createdAt = now;
