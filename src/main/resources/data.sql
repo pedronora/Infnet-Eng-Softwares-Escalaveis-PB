@@ -1,0 +1,1 @@
+INSERT INTO posts (title, content) VALUES ('Casildis', 'Mussum Ipsum, cacilds vidis litro abertis. Tá deprimidis, eu conheço uma cachacis que pode alegrar sua vidis.')
